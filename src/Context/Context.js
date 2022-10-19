@@ -18,24 +18,19 @@ function Provider({ children }) {
     getData();
   }, []);
 
-  const handleChange = ({ target: { value } }) => {
-    setPlanetFilter(value);
-  };
-
   Provider.propTypes = {
     children: PropTypes.element,
   };
   Provider.defaultProps = {
     children: <>default</>,
   };
+
+  const handleChange = ({ target: { value } }) => {
+    setPlanetFilter(value);
+  };
+
   const context = useMemo(() => ({
-    planetFilter,
-    planets,
-    handleChange,
-  }
-  ), [planetFilter,
-    planets,
-    handleChange]);
+    planetFilter, planets, handleChange }), [planetFilter, planets]);
 
   return <Context.Provider value={ context }>{children}</Context.Provider>;
 }
