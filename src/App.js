@@ -1,11 +1,14 @@
-import React from 'react';
 import './App.css';
+import Filters from './Components/Filters';
+import Table from './Components/Table';
+import Provider from './Context/Context';
 
-
-//Francisco  Costa
 function App() {
   return (
-    <span>Hello, App!</span>
+    <Provider>
+      <Filters />
+      <Table />
+    </Provider>
   );
 }
 
