@@ -3,8 +3,6 @@ import { Context } from '../Context/Context';
 
 function Table() {
   const { planets, planetFilter } = useContext(Context);
-  console.log(planetFilter,"aqwsqw");
-
   return (
     <div className="Display">
       <table>
