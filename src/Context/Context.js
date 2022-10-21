@@ -21,6 +21,9 @@ function Provider({ children }) {
     'surface_water',
   ]);
 
+  const [collum, setCollum] = useState('population');
+  const [sort, setsort] = useState('ASC');
+  const [orderSort, setorderSort] = useState({});
   useEffect(() => {
     const getData = async () => {
       const data = await getPlantesStarwars();
@@ -39,6 +42,27 @@ function Provider({ children }) {
     );
     setplanetsFilterName(newPlanets);
   }, [FilterByName]);
+
+  useEffect(() => {
+    const unknowArray = planetsFilterName.filter(
+      (e) => e[collum] === 'unknown',
+    );
+    const knowArray = planetsFilterName.filter((e) => e[collum] !== 'unknown');
+    if (orderSort.sort === 'ASC') {
+      const arrayNew = knowArray.sort(
+        (a, b) => a[orderSort.collum] - b[orderSort.collum],
+      );
+      setplanetsFilterName([...arrayNew, ...unknowArray]);
+      setsort('DESC');
+    }
+    if (orderSort.sort === 'DESC') {
+      const arrayNew = knowArray.sort(
+        (a, b) => b[orderSort.collum] - a[orderSort.collum],
+      );
+      setplanetsFilterName([...arrayNew, ...unknowArray]);
+      setsort('ASC');
+    }
+  }, [orderSort]);
 
   const filtering = () => {
     arrayFilters.forEach((filter) => {
@@ -80,6 +104,15 @@ function Provider({ children }) {
   const handleChange = ({ target: { value } }) => {
     setFilterByName(value);
   };
+
+  const handleCollum = ({ target: { value } }) => {
+    setCollum(value);
+  };
+
+  const handleSort = ({ target: { value } }) => {
+    setsort(value);
+  };
+
   const handleRemoveAll = () => {
     setfilterArray([]);
     setarrayData([
@@ -90,7 +123,6 @@ function Provider({ children }) {
       'surface_water',
     ]);
     setplanetsFilterName(planets);
-    console.log('AAAAAAAAAAAAAAAAAAAA');
   };
 
   const handleFilters = () => {
@@ -117,8 +149,10 @@ function Provider({ children }) {
 
   const handleOrder = () => {
     const order = {
+      collum,
+      sort,
     };
-    console.log(order);
+    setorderSort(order);
   };
 
   const context = useMemo(
@@ -132,6 +166,10 @@ function Provider({ children }) {
       arrayData,
       arrayFilters,
       planetsFilterName,
+      collum,
+      sort,
+      handleCollum,
+      handleSort,
       handleChange,
       handleTypeOfFilter,
       handleOperator,
@@ -150,6 +188,8 @@ function Provider({ children }) {
       operator,
       valueFilter,
       arrayData,
+      collum,
+      sort,
     ],
   );
 

@@ -16,6 +16,9 @@ function Filters() {
     operator,
     handleRemoveAll,
     handleOrder,
+    handleCollum,
+    collum,
+    handleSort,
   } = useContext(Context);
 
   return (
@@ -64,7 +67,7 @@ function Filters() {
       >
         Remove all
       </button>
-      <select data-testid="column-sort">
+      <select data-testid="column-sort" onChange={ handleCollum } value={ collum }>
         <option value="population">population</option>
         <option value="orbital_period">orbital_period</option>
         <option value="diameter">diameter</option>
@@ -79,6 +82,7 @@ function Filters() {
           name="order"
           data-testid="column-sort-input-asc"
           value="ASC"
+          onChange={ handleSort }
         />
       </label>
       <label htmlFor="order-desc">
@@ -89,6 +93,7 @@ function Filters() {
           name="order"
           data-testid="column-sort-input-desc"
           value="DESC"
+          onChange={ handleSort }
         />
       </label>
       <button
@@ -103,7 +108,6 @@ function Filters() {
         <div key={ filter } name={ filter } data-testid="filter">
           <p>
             {`Filter : ${filter.typeOfFilter} ${filter.operator} ${filter.valueFilter}`}
-
           </p>
           <button
             type="button"
