@@ -7,7 +7,7 @@ function Table() {
   if (isLoading) return <Loading />;
   return (
     <div className="Display">
-      <table>
+      <table data-testid="tabel">
         <thead>
           <tr>
             <th>Name</th>

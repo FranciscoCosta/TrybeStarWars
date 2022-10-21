@@ -93,7 +93,7 @@ function Filters() {
       </label>
       <button
         type="button"
-        testid="column-sort-button"
+        data-testid="column-sort-button"
         onClick={ handleOrder }
       >
         Order

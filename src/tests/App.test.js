@@ -1,36 +1,52 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import App from "../App";
+import userEvent from '@testing-library/user-event'
 
-test("Testing filter rendering ", async () => {
+test("Testing elements on page ", async () => {
   render(<App />);
 
-  const input = screen.getAllByRole("textbox");
-  const select = screen.getAllByRole("combobox")
-  const placeholder = screen.getByPlaceholderText(/planets/i);
   const nameFilter = screen.getByTestId("name-filter");
-  const columnFilter = screen.getByTestId("column-filter");
   const comparisonFilter = screen.getByTestId("comparison-filter");
   const valueFilter = screen.getByTestId("value-filter");
   const buttonFilter = screen.getByTestId("button-filter");
-  const botaoFilter = screen.getByRole("button", {
-    name: /Filter/i,
-  });
-  expect(input).toBeInTheDocument();
-  expect(select).toBeInTheDocument();
-  expect(placeholder).toBeInTheDocument();
+  const buttonRemoveFilters = screen.getByTestId("button-remove-filters");
+  const columnSort = screen.getByTestId("column-sort");
+  const columnSortInputAsc = screen.getByTestId("column-sort-input-asc");
+  const columnSortInputDesc = screen.getByTestId("column-sort-input-desc");
+  const columnSortButton = screen.getByTestId("column-sort-button");
+  // const table = screen.getByTestId("tabel-1");
+
   expect(nameFilter).toBeInTheDocument();
-  expect(columnFilter).toBeInTheDocument();
   expect(comparisonFilter).toBeInTheDocument();
   expect(valueFilter).toBeInTheDocument();
   expect(buttonFilter).toBeInTheDocument();
-  expect(botaoFilter).toBeInTheDocument();
-  expect(input.length).toBe(1);
-  expect(select.length).toBe(2);
+  expect(buttonRemoveFilters).toBeInTheDocument();
+  expect(columnSort).toBeInTheDocument();
+  expect(columnSortInputAsc).toBeInTheDocument();
+  expect(columnSortInputDesc).toBeInTheDocument();
+  expect(columnSortButton).toBeInTheDocument();
+  // expect(table).toBeInTheDocument();
 
-  const inputPlanet = screen.getByPlaceholderText('planets');
-  const buttonFiltro = screen.getByRole('button', {
-    name: /filter/i,
-  });
+
+});
+
+test('If addding filter -> button remove apears', async () => {
+  render(<App />);
+
+  
+  userEvent.click(screen.getByTestId('button-filter'));
+  await screen.findByTestId('filter');
+  const btnExcluir = screen.getByRole('button', {
+    name: /Apagar/i
+  })
+  expect(btnExcluir).toBeInTheDocument();
+
+  userEvent.click(btnExcluir);
+
+  btnExcluir.forEach((e) => {
+    userEvent.click(e)
+  })
+  
 
 });
