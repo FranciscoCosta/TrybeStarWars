@@ -3,9 +3,8 @@ import { Context } from '../Context/Context';
 import Loading from './Loading';
 
 function Table() {
-  const { isLoading, nameFilter } = useContext(Context);
+  const { isLoading, planetsFilterName } = useContext(Context);
   if (isLoading) return <Loading />;
-  console.log(nameFilter);
   return (
     <div className="Display">
       <table>
@@ -27,7 +26,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {(!isLoading) && nameFilter.map((planet) => (
+          {(!isLoading) && planetsFilterName.map((planet) => (
             <tr
               key={ planet.name }
             >

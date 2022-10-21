@@ -6,12 +6,20 @@ export const Context = createContext();
 
 function Provider({ children }) {
   const [planets, setplanets] = useState([]);
+  const [planetsFilterName, setplanetsFilterName] = useState([]);
   const [isLoading, setisLoading] = useState(true);
   const [FilterByName, setFilterByName] = useState('');
-  const [nameFilter, setnameFilter] = useState([]);
-  const [typeOfFilter, settypeOfFilter] = useState('population');
   const [operator, setoperator] = useState('maior que');
   const [valueFilter, setvalueFilter] = useState(0);
+  const [typeOfFilter, settypeOfFilter] = useState('population');
+  const [arrayFilters, setfilterArray] = useState([]);
+  const [arrayData, setarrayData] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
 
   useEffect(() => {
     const getData = async () => {
@@ -19,17 +27,45 @@ function Provider({ children }) {
       const { results } = data;
       results.map((planet) => delete planet.residents);
       setplanets(results);
-      setnameFilter(results);
+      setplanetsFilterName(results);
       setisLoading(false);
     };
     getData();
   }, []);
 
   useEffect(() => {
-    const newData = planets.filter((planet) => (
-      planet.name.toLowerCase().includes(FilterByName.toLowerCase())));
-    setnameFilter(newData);
+    const newPlanets = planets.filter(
+      (planet) => planet.name.toLowerCase().includes(FilterByName.toLowerCase()),
+    );
+    setplanetsFilterName(newPlanets);
   }, [FilterByName]);
+
+  const filtering = () => {
+    arrayFilters.forEach((filter) => {
+      if (filter.operator === 'maior que') {
+        const filterValue = planetsFilterName.filter(
+          (par) => Number(par[filter.typeOfFilter]) > Number(filter.valueFilter),
+        );
+        setplanetsFilterName(filterValue);
+      }
+      if (filter.operator === 'menor que') {
+        const filterValue = planetsFilterName.filter(
+          (par) => Number(par[filter.typeOfFilter]) < Number(filter.valueFilter),
+        );
+        setplanetsFilterName(filterValue);
+      }
+      if (operator === 'igual a') {
+        const filterValue = planetsFilterName.filter(
+          (par) => par[filter.typeOfFilter] === valueFilter,
+        );
+        setplanetsFilterName(filterValue);
+      }
+    });
+  };
+  useEffect(() => {
+    settypeOfFilter(arrayData[0]);
+    filtering();
+  }, [arrayFilters]);
 
   const handleTypeOfFilter = ({ target: { value } }) => {
     settypeOfFilter(value);
@@ -44,25 +80,45 @@ function Provider({ children }) {
   const handleChange = ({ target: { value } }) => {
     setFilterByName(value);
   };
+  const handleRemoveAll = () => {
+    setfilterArray([]);
+    setarrayData([
+      'population',
+      'orbital_period',
+      'diameter',
+      'rotation_period',
+      'surface_water',
+    ]);
+    setplanetsFilterName(planets);
+    console.log('AAAAAAAAAAAAAAAAAAAA');
+  };
+
   const handleFilters = () => {
-    if (operator === 'maior que') {
-      const filterValue = nameFilter.filter(
-        (x) => Number(x[typeOfFilter]) > Number(valueFilter),
-      );
-      setnameFilter(filterValue);
-    }
-    if (operator === 'menor que') {
-      const filterValue = nameFilter.filter(
-        (x) => Number(x[typeOfFilter]) < Number(valueFilter),
-      );
-      setnameFilter(filterValue);
-    }
-    if (operator === 'igual a') {
-      const filterValue = nameFilter.filter(
-        (x) => x[typeOfFilter] === valueFilter,
-      );
-      setnameFilter(filterValue);
-    }
+    const objFilter = {
+      typeOfFilter,
+      operator,
+      valueFilter,
+    };
+    const newObjFilter = [...arrayFilters, objFilter];
+    setfilterArray(newObjFilter);
+    const addFilter = arrayData.filter((param) => param !== typeOfFilter);
+    setarrayData(addFilter);
+    console.log(arrayData);
+  };
+
+  const handleDelete = (event) => {
+    const type = event.target.value;
+    const newArray = [...arrayData, type];
+    setarrayData(newArray);
+    const teste = arrayFilters.filter((filtro) => filtro.typeOfFilter !== type);
+    setplanetsFilterName(planets);
+    setfilterArray(teste);
+  };
+
+  const handleOrder = () => {
+    const order = {
+    };
+    console.log(order);
   };
 
   const context = useMemo(
@@ -70,24 +126,30 @@ function Provider({ children }) {
       FilterByName,
       planets,
       isLoading,
-      nameFilter,
       typeOfFilter,
       operator,
       valueFilter,
+      arrayData,
+      arrayFilters,
+      planetsFilterName,
       handleChange,
       handleTypeOfFilter,
       handleOperator,
       handleValueFilter,
       handleFilters,
+      handleDelete,
+      handleRemoveAll,
+      handleOrder,
     }),
     [
       FilterByName,
+      planetsFilterName,
       planets,
       isLoading,
-      nameFilter,
       typeOfFilter,
       operator,
       valueFilter,
+      arrayData,
     ],
   );
 
